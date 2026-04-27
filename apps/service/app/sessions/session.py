@@ -1,4 +1,5 @@
 import asyncio
+import contextlib
 from collections.abc import AsyncIterator
 
 from app.asr.base import ASRProvider, ASRSessionContext, TranscriptEvent
@@ -28,7 +29,12 @@ class TranscriptionSession:
             return
 
         self._closed = True
-        await self._queue.put(None)
+        try:
+            self._queue.put_nowait(None)
+        except asyncio.QueueFull:
+            with contextlib.suppress(asyncio.QueueEmpty):
+                self._queue.get_nowait()
+            self._queue.put_nowait(None)
 
     async def events(self) -> AsyncIterator[TranscriptEvent]:
         async for event in self.provider.stream(self.context, self._audio()):

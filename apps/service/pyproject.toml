@@ -17,6 +17,7 @@ qwen = [
 
 [dependency-groups]
 dev = [
+  "httpx>=0.28.1",
   "pytest>=8.3.0",
   "ruff>=0.9.0",
 ]
@@ -28,3 +29,5 @@ target-version = "py312"
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
 
+[tool.pytest.ini_options]
+pythonpath = ["."]

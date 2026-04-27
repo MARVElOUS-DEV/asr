@@ -6,6 +6,17 @@ import { TranscriptionSocket } from "@/features/transcription/realtime/transcrip
 type SessionStatus = "idle" | "connecting" | "recording" | "stopped" | "error";
 
 const DEFAULT_WS_URL = import.meta.env.VITE_ASR_WS_URL ?? "ws://localhost:8000/ws/transcribe";
+const ASR_AUTH_TOKEN = import.meta.env.VITE_ASR_AUTH_TOKEN;
+
+function getWebSocketUrl() {
+  if (!ASR_AUTH_TOKEN) {
+    return DEFAULT_WS_URL;
+  }
+
+  const url = new URL(DEFAULT_WS_URL, window.location.href);
+  url.searchParams.set("access_token", ASR_AUTH_TOKEN);
+  return url.toString();
+}
 
 export function useTranscriptionSession() {
   const [status, setStatus] = useState<SessionStatus>("idle");
@@ -55,7 +66,7 @@ export function useTranscriptionSession() {
     setStatus("connecting");
 
     const socket = new TranscriptionSocket({
-      url: DEFAULT_WS_URL,
+      url: getWebSocketUrl(),
       onEvent: handleServerEvent,
       onOpen: () => {
         socket.sendEvent({

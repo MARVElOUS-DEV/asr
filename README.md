@@ -39,3 +39,5 @@ uv run uvicorn app.main:create_app --factory --reload --host 0.0.0.0 --port 8000
 
 The initial service uses a mock streaming ASR provider by default. Set `ASR_PROVIDER=qwen3` on a GPU machine after installing the optional Qwen runtime.
 
+Set `ASR_AUTH_TOKEN` on the service to require websocket authentication. Browser
+clients should set the same value as `VITE_ASR_AUTH_TOKEN`.

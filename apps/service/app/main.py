@@ -1,14 +1,32 @@
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+from typing import Any
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.health import router as health_router
 from app.api.websocket import router as websocket_router
+from app.asr.factory import create_asr_provider
 from app.core.config import get_settings
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    settings = get_settings()
+    if settings.preload_asr_provider:
+        provider = create_asr_provider(settings)
+        await _warmup_provider(provider)
+    yield
 
 
 def create_app() -> FastAPI:
     settings = get_settings()
-    app = FastAPI(title="ASR Streaming Service", version="0.1.0")
+    app = FastAPI(
+        title="ASR Streaming Service",
+        version="0.1.0",
+        lifespan=lifespan,
+    )
 
     app.add_middleware(
         CORSMiddleware,
@@ -21,3 +39,9 @@ def create_app() -> FastAPI:
     app.include_router(health_router)
     app.include_router(websocket_router)
     return app
+
+
+async def _warmup_provider(provider: Any) -> None:
+    warmup = getattr(provider, "warmup", None)
+    if warmup is not None:
+        await warmup()

@@ -21,6 +21,20 @@ Response:
 WS /ws/transcribe
 ```
 
+When `ASR_AUTH_TOKEN` is set on the service, websocket clients must provide the
+same token in one of these forms:
+
+```http
+Authorization: Bearer <token>
+X-ASR-Auth-Token: <token>
+```
+
+Browser clients can authenticate with the websocket URL:
+
+```http
+WS /ws/transcribe?access_token=<token>
+```
+
 ### Client Events
 
 Start a session:
@@ -87,4 +101,3 @@ Error:
   "message": "Unsupported sample rate"
 }
 ```
-
