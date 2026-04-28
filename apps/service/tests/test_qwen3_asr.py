@@ -84,6 +84,7 @@ async def test_qwen_provider_streams_partial_and_final_events(
         model_name="Qwen/Qwen3-ASR-0.6B",
         gpu_memory_utilization=0.8,
         max_new_tokens=32,
+        max_inference_batch_size=1,
         stream_chunk_seconds=2.0,
         unfixed_chunk_num=2,
         unfixed_token_num=5,

@@ -42,6 +42,11 @@ class Settings(BaseSettings):
         alias="ASR_QWEN_MAX_NEW_TOKENS",
         gt=0,
     )
+    qwen_max_inference_batch_size: int = Field(
+        default=1,
+        alias="ASR_QWEN_MAX_INFERENCE_BATCH_SIZE",
+        gt=0,
+    )
     qwen_stream_chunk_seconds: float = Field(
         default=2.0,
         alias="ASR_QWEN_STREAM_CHUNK_SECONDS",

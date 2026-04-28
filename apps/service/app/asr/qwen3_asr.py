@@ -49,6 +49,7 @@ class Qwen3ASRProvider(ASRProvider):
         *,
         gpu_memory_utilization: float,
         max_new_tokens: int,
+        max_inference_batch_size: int,
         stream_chunk_seconds: float,
         unfixed_chunk_num: int,
         unfixed_token_num: int,
@@ -57,6 +58,7 @@ class Qwen3ASRProvider(ASRProvider):
         self.model_name = model_name
         self.gpu_memory_utilization = gpu_memory_utilization
         self.max_new_tokens = max_new_tokens
+        self.max_inference_batch_size = max_inference_batch_size
         self.stream_chunk_seconds = stream_chunk_seconds
         self.unfixed_chunk_num = unfixed_chunk_num
         self.unfixed_token_num = unfixed_token_num
@@ -126,6 +128,7 @@ class Qwen3ASRProvider(ASRProvider):
         return Qwen3ASRModel.LLM(
             model=self.model_name,
             gpu_memory_utilization=self.gpu_memory_utilization,
+            max_inference_batch_size=self.max_inference_batch_size,
             max_new_tokens=self.max_new_tokens,
         )
 
